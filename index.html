@@ -1,1 +1,1633 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>گالری پرامپت</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+
+  <style>
+    :root {
+      --bg: #f5f8fc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5fa;
+      --border: #d7e1ed;
+      --border-strong: #c6d4e5;
+      --text: #111a2d;
+      --muted: #62738b;
+      --primary: #159fea;
+      --primary-dark: #087fc7;
+      --primary-soft: #eaf7ff;
+      --prompt-header: #1d2a40;
+      --prompt-bg: #0c172b;
+      --prompt-text: #edf2fb;
+      --prompt-number: #53627b;
+      --shadow: 0 18px 48px rgba(34, 53, 78, 0.09);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(21, 159, 234, 0.08), transparent 30%),
+        var(--bg);
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .site-shell {
+      width: min(1440px, calc(100% - 32px));
+      margin: 28px auto 70px;
+    }
+
+    .topbar {
+      min-height: 94px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 54px;
+      height: 54px;
+      flex: 0 0 54px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #199fe9, #7657f6);
+      box-shadow: 0 10px 26px rgba(70, 99, 231, 0.24);
+    }
+
+    .brand-icon svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    .brand-name {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.5;
+      font-weight: 900;
+    }
+
+    .brand-subtitle {
+      margin: 1px 0 0;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      direction: ltr;
+      text-align: right;
+    }
+
+    .submit-prompt-button {
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 22px;
+      color: #fff;
+      font-weight: 900;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #11a6ee, #3387ef);
+      box-shadow: 0 10px 23px rgba(21, 159, 234, 0.24);
+      transition: 0.2s ease;
+    }
+
+    .submit-prompt-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 13px 28px rgba(21, 159, 234, 0.30);
+    }
+
+    .submit-prompt-button svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .intro {
+      width: min(1020px, 100%);
+      margin: 30px auto 18px;
+      text-align: center;
+    }
+
+    .intro h2 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: 1.5;
+    }
+
+    .intro p {
+      max-width: 700px;
+      margin: 10px auto 0;
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .gallery {
+      width: min(1020px, 100%);
+      margin: 24px auto 0;
+      display: grid;
+      gap: 24px;
+    }
+
+    .prompt-card {
+      padding: 34px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 22px;
+      margin-bottom: 24px;
+    }
+
+    .card-title-area {
+      min-width: 0;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 11px;
+    }
+
+    .badge {
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      color: #5d6f87;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #f2f6fb;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: clamp(22px, 4vw, 31px);
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .stats {
+      display: flex;
+      direction: ltr;
+      align-items: center;
+      gap: 16px;
+      color: #63758f;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat svg {
+      width: 23px;
+      height: 23px;
+    }
+
+    .media-frame {
+      overflow: hidden;
+      min-height: 330px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #d4dfeb;
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(145deg, rgba(21, 159, 234, 0.12), rgba(118, 87, 246, 0.09)),
+        #eaf0f7;
+    }
+
+    .media-frame img,
+    .media-frame video {
+      display: block;
+      width: 100%;
+      max-height: 620px;
+      object-fit: contain;
+      background: #08101d;
+    }
+
+    .media-placeholder {
+      min-height: 390px;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      padding: 40px;
+      text-align: center;
+      color: #60728a;
+      background:
+        radial-gradient(circle at 30% 22%, rgba(21, 159, 234, 0.22), transparent 28%),
+        radial-gradient(circle at 75% 72%, rgba(118, 87, 246, 0.18), transparent 31%),
+        linear-gradient(135deg, #edf7ff, #f0f2fb);
+    }
+
+    .media-placeholder-icon {
+      width: 90px;
+      height: 90px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      color: #fff;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #159fea, #7657f6);
+      box-shadow: 0 17px 35px rgba(43, 107, 213, 0.22);
+    }
+
+    .media-placeholder-icon svg {
+      width: 44px;
+      height: 44px;
+    }
+
+    .media-placeholder h3 {
+      margin: 0 0 10px;
+      color: #16233a;
+      font-size: 23px;
+    }
+
+    .media-placeholder p {
+      max-width: 460px;
+      margin: 0;
+      line-height: 2;
+    }
+
+    .description {
+      margin: 28px 0;
+      padding: 18px 22px;
+      color: #607089;
+      line-height: 2;
+      border-right: 5px solid var(--primary);
+      border-radius: var(--radius-md);
+      background: var(--surface-soft);
+    }
+
+    .prompt-box {
+      overflow: hidden;
+      border: 1px solid #26354f;
+      border-radius: var(--radius-lg);
+      background: var(--prompt-bg);
+    }
+
+    .prompt-toolbar {
+      min-height: 64px;
+      display: flex;
+      direction: ltr;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 11px 18px;
+      color: #aab7ca;
+      background: var(--prompt-header);
+      border-bottom: 1px solid #32425d;
+    }
+
+    .prompt-label {
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      letter-spacing: 1px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .copy-button {
+      min-width: 94px;
+      min-height: 40px;
+      display: inline-flex;
+      direction: rtl;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 15px;
+      color: #fff;
+      font-weight: 900;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #16a1ee, #2d85ee);
+    }
+
+    .copy-button.success {
+      background: #10a36a;
+    }
+
+    .copy-button svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .prompt-scroll {
+      max-height: 470px;
+      overflow: auto;
+      direction: ltr;
+      scrollbar-width: thin;
+      scrollbar-color: #68758a #111c31;
+    }
+
+    .prompt-code {
+      margin: 0;
+      min-height: 300px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      padding: 17px 0 25px;
+      color: var(--prompt-text);
+      font: 15px/2 'JetBrains Mono', Consolas, Monaco, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      tab-size: 2;
+    }
+
+    .line-number {
+      min-width: 62px;
+      padding: 0 18px 0 12px;
+      color: var(--prompt-number);
+      text-align: right;
+      user-select: none;
+    }
+
+    .line-content {
+      padding: 0 24px;
+      border-left: 1px solid rgba(116, 133, 160, 0.15);
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 27px;
+    }
+
+    .card-action {
+      min-height: 50px;
+      min-width: 136px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 18px;
+      color: #152036;
+      font-weight: 900;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      transition: 0.2s ease;
+    }
+
+    .card-action:hover {
+      transform: translateY(-2px);
+      background: #f7fbff;
+      border-color: #aac6e4;
+    }
+
+    .card-action.active {
+      color: #e33664;
+      border-color: #f2b6c7;
+      background: #fff6f8;
+    }
+
+    .card-action svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .empty-state {
+      display: none;
+      padding: 45px 24px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(6, 13, 24, 0.68);
+      backdrop-filter: blur(7px);
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .submit-modal {
+      width: min(720px, 100%);
+      height: auto;
+      max-height: calc(100dvh - 36px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.30);
+    }
+
+    #promptForm {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 25px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .close-modal {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: #111a2d;
+      border: 0;
+      border-radius: 12px;
+      background: #f2f6fb;
+    }
+
+    .modal-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 24px;
+      padding-bottom: 34px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label,
+    .field-legend {
+      display: block;
+      margin-bottom: 9px;
+      color: #52647d;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      color: #172338;
+      border: 1px solid var(--border-strong);
+      border-radius: 13px;
+      outline: none;
+      background: #f4f7fb;
+      transition: 0.2s ease;
+    }
+
+    .field input,
+    .field select {
+      height: 52px;
+      padding: 0 14px;
+    }
+
+    .field textarea {
+      min-height: 105px;
+      padding: 14px;
+      line-height: 1.9;
+      resize: vertical;
+    }
+
+    .field textarea.prompt-input {
+      min-height: 260px;
+      direction: ltr;
+      text-align: left;
+      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #58b6ee;
+      box-shadow: 0 0 0 4px rgba(21, 159, 234, 0.11);
+      background: #fff;
+    }
+
+    .media-type-switch {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .media-type-option {
+      position: relative;
+    }
+
+    .media-type-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .media-type-option label {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin: 0;
+      color: #52647d;
+      font-weight: 900;
+      border: 1px solid var(--border-strong);
+      border-radius: 13px;
+      background: #f4f7fb;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .media-type-option input:checked + label {
+      color: var(--primary-dark);
+      border-color: #67bced;
+      background: var(--primary-soft);
+      box-shadow: 0 0 0 3px rgba(21, 159, 234, 0.09);
+    }
+
+    .upload-area {
+      position: relative;
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      border: 2px dashed #c8d7e8;
+      border-radius: 17px;
+      background: #f3f7fb;
+      transition: 0.2s ease;
+      overflow: hidden;
+    }
+
+    .upload-area.dragging,
+    .upload-area:hover {
+      border-color: #59b8ef;
+      background: #eff9ff;
+    }
+
+    .upload-area input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    .upload-default svg {
+      width: 54px;
+      height: 54px;
+      color: var(--primary);
+      margin-bottom: 13px;
+    }
+
+    .upload-default strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .upload-default span {
+      color: #708198;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .upload-preview {
+      width: 100%;
+      display: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    .upload-preview img,
+    .upload-preview video {
+      display: block;
+      width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #0b1322;
+    }
+
+    .form-error {
+      display: none;
+      margin: 18px 0 0;
+      padding: 13px 15px;
+      color: #b42318;
+      line-height: 1.8;
+      border: 1px solid #f3c0bb;
+      border-radius: 12px;
+      background: #fff5f4;
+    }
+
+    .modal-footer {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 18px 24px;
+      border-top: 1px solid var(--border);
+      background: #fbfcfe;
+      box-shadow: 0 -10px 26px rgba(34, 53, 78, 0.06);
+    }
+
+    .secondary-button,
+    .publish-button {
+      min-height: 49px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 19px;
+      font-weight: 900;
+      border-radius: 13px;
+    }
+
+    .secondary-button {
+      color: #18243a;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .publish-button {
+      color: #fff;
+      border: 0;
+      background: linear-gradient(135deg, #11a6ee, #3387ef);
+      box-shadow: 0 9px 20px rgba(21, 159, 234, 0.22);
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 2000;
+      left: 50%;
+      bottom: 24px;
+      transform: translate(-50%, 30px);
+      padding: 13px 20px;
+      color: #fff;
+      font-weight: 800;
+      border-radius: 13px;
+      background: #172338;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+
+    /* Typography polish */
+    body {
+      font-feature-settings: "ss01" 1, "kern" 1;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .brand-name,
+    .intro h2,
+    .card-title,
+    .modal-head h2 {
+      letter-spacing: -0.35px;
+    }
+
+    .brand-name {
+      font-weight: 900;
+    }
+
+    .intro p,
+    .description,
+    .field label,
+    .field-legend,
+    .field input,
+    .field select,
+    .field textarea {
+      font-weight: 500;
+    }
+
+    .submit-prompt-button,
+    .publish-button,
+    .secondary-button,
+    .card-action,
+    .copy-button,
+    .badge {
+      font-weight: 800;
+      letter-spacing: -0.15px;
+    }
+
+    .prompt-code,
+    .field textarea.prompt-input {
+      letter-spacing: -0.1px;
+    }
+
+    @media (max-width: 760px) {
+      .site-shell {
+        width: min(100% - 20px, 1440px);
+        margin-top: 10px;
+      }
+
+      .topbar {
+        min-height: 76px;
+        padding: 13px 14px;
+        border-radius: 18px;
+      }
+
+      .brand-icon {
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
+        border-radius: 14px;
+      }
+
+      .brand-name {
+        font-size: 16px;
+      }
+
+      .brand-subtitle {
+        font-size: 10px;
+      }
+
+      .submit-prompt-button {
+        min-height: 44px;
+        padding: 0 13px;
+        font-size: 13px;
+      }
+
+      .prompt-card {
+        padding: 20px 15px;
+        border-radius: 19px;
+      }
+
+      .card-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .stats {
+        width: 100%;
+        justify-content: flex-end;
+        font-size: 13px;
+      }
+
+      .media-frame,
+      .media-placeholder {
+        min-height: 235px;
+      }
+
+      .description {
+        margin: 20px 0;
+        padding: 15px 16px;
+      }
+
+      .prompt-code {
+        font-size: 13px;
+        line-height: 1.9;
+      }
+
+      .line-number {
+        min-width: 46px;
+        padding-right: 11px;
+      }
+
+      .line-content {
+        padding: 0 14px;
+      }
+
+      .card-action {
+        min-width: calc(50% - 7px);
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .modal-body {
+        padding: 18px;
+        padding-bottom: 28px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .modal-footer {
+        padding: 15px 18px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .brand-subtitle {
+        display: none;
+      }
+
+      .submit-prompt-button span {
+        display: none;
+      }
+
+      .submit-prompt-button {
+        width: 46px;
+        padding: 0;
+      }
+
+      .intro {
+        margin-top: 22px;
+      }
+
+      .card-action {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+            <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"></path>
+            <path d="M9.5 9.5h5v5h-5z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-name">گالری پرامپت</h1>
+          <p class="brand-subtitle">AI Prompt & Media Gallery</p>
+        </div>
+      </div>
+
+      <button class="submit-prompt-button" id="openSubmitModal" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+        <span>ثبت پرامپت</span>
+      </button>
+    </header>
+
+    <section class="intro">
+      <h2>پرامپت‌ها و خروجی‌های خلاقانه</h2>
+      <p>تصویر یا ویدئوی ساخته‌شده را همراه با متن کامل پرامپت ثبت کنید تا داخل همین سکشن اصلی نمایش داده شود.</p>
+    </section>
+
+    <section class="gallery" id="gallery" aria-live="polite"></section>
+    <div class="empty-state" id="emptyState">هنوز پرامپتی ثبت نشده است.</div>
+  </main>
+
+  <div class="modal-backdrop" id="submitModal" aria-hidden="true">
+    <section class="submit-modal" role="dialog" aria-modal="true" aria-labelledby="submitModalTitle">
+      <header class="modal-head">
+        <h2 id="submitModalTitle">ثبت پرامپت جدید</h2>
+        <button class="close-modal" id="closeSubmitModal" type="button" aria-label="بستن">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="24" height="24">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </header>
+
+      <form id="promptForm">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field full">
+              <span class="field-legend">نوع خروجی</span>
+              <div class="media-type-switch">
+                <div class="media-type-option">
+                  <input id="typeImage" name="mediaType" type="radio" value="image" checked>
+                  <label for="typeImage">تصویر</label>
+                </div>
+                <div class="media-type-option">
+                  <input id="typeVideo" name="mediaType" type="radio" value="video">
+                  <label for="typeVideo">ویدئو</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label>خروجی ساخته‌شده</label>
+              <div class="upload-area" id="uploadArea">
+                <input id="mediaFile" type="file" accept="image/*" required>
+                <div class="upload-default" id="uploadDefault">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M12 16V4"></path>
+                    <path d="m7 9 5-5 5 5"></path>
+                    <path d="M20 15.5A4.5 4.5 0 0 1 15.5 20h-8A5.5 5.5 0 0 1 7 9.02"></path>
+                  </svg>
+                  <strong>فایل را بکشید و اینجا رها کنید یا انتخاب کنید</strong>
+                  <span id="uploadHint">پشتیبانی از JPG، PNG و WEBP</span>
+                </div>
+                <div class="upload-preview" id="uploadPreview"></div>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="promptTitle">عنوان پرامپت</label>
+              <input id="promptTitle" type="text" placeholder="مثلاً ساخت ویدیوی تبلیغاتی غذا" required>
+            </div>
+
+            <div class="field">
+              <label for="category">دسته‌بندی</label>
+              <select id="category" required>
+                <option value="">انتخاب کنید</option>
+                <option>تصویرسازی</option>
+                <option>عکاسی</option>
+                <option>ویدئو</option>
+                <option>تبلیغات</option>
+                <option>هنر دیجیتال</option>
+                <option>معماری</option>
+                <option>محصول</option>
+                <option>سایر</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="aiModel">مدل هوش مصنوعی</label>
+              <select id="aiModel" required>
+                <option value="">انتخاب کنید</option>
+                <option>Midjourney</option>
+                <option>ChatGPT Image</option>
+                <option>Veo</option>
+                <option>Kling</option>
+                <option>Runway</option>
+                <option>Seedance</option>
+                <option>Flux</option>
+                <option>سایر</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="description">توضیحات کوتاه (اختیاری)</label>
+              <textarea id="description" placeholder="نکاتی درباره این پرامپت یا خروجی آن..."></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="promptText">پرامپت اصلی</label>
+              <textarea class="prompt-input" id="promptText" placeholder="متن کامل پرامپت را اینجا وارد کنید..." required></textarea>
+            </div>
+          </div>
+
+          <div class="form-error" id="formError"></div>
+        </div>
+
+        <footer class="modal-footer">
+          <button class="secondary-button" id="cancelSubmit" type="button">انصراف</button>
+          <button class="publish-button" type="submit">ثبت و نمایش پرامپت</button>
+        </footer>
+      </form>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <template id="promptCardTemplate">
+    <article class="prompt-card">
+      <div class="card-head">
+        <div class="card-title-area">
+          <div class="badges">
+            <span class="badge card-model"></span>
+            <span class="badge card-category"></span>
+          </div>
+          <h3 class="card-title"></h3>
+        </div>
+
+        <div class="stats">
+          <span class="stat">
+            <span class="like-count">0</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"></path>
+            </svg>
+          </span>
+
+          <span class="stat">
+            <span class="copy-count">0</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </span>
+
+          <span class="stat">
+            <span class="view-count">1</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <div class="media-frame"></div>
+      <div class="description card-description"></div>
+
+      <section class="prompt-box">
+        <div class="prompt-toolbar">
+          <span class="prompt-label">RAW PROMPT</span>
+          <button class="copy-button" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>کپی</span>
+          </button>
+        </div>
+        <div class="prompt-scroll">
+          <pre class="prompt-code"></pre>
+        </div>
+      </section>
+
+      <div class="card-actions">
+        <button class="card-action like-button" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"></path>
+          </svg>
+          پسند
+        </button>
+
+        <button class="card-action download-button" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3v12"></path>
+            <path d="m7 10 5 5 5-5"></path>
+            <path d="M5 21h14"></path>
+          </svg>
+          دانلود TXT
+        </button>
+
+        <button class="card-action share-button" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <path d="m8.6 10.7 6.8-4M8.6 13.3l6.8 4"></path>
+          </svg>
+          اشتراک
+        </button>
+      </div>
+    </article>
+  </template>
+
+  <script>
+    (() => {
+      const defaultPrompt = {
+        id: "main-prompt",
+        title: "نمونه پرامپت ساخت خروجی تصویری",
+        category: "هنر دیجیتال",
+        model: "مدل هوش مصنوعی",
+        description: "در این بخش توضیح کوتاهی درباره خروجی، کاربرد پرامپت یا نکات مهم استفاده از آن نمایش داده می‌شود.",
+        prompt:
+`Create a cinematic, highly detailed visual.
+
+SUBJECT
+Describe the main subject here.
+
+ENVIRONMENT
+Describe the location, lighting and atmosphere.
+
+CAMERA
+Professional camera, realistic lens, natural depth of field.
+
+STYLE
+Photorealistic, sharp details, believable textures.
+
+OUTPUT FORMAT
+High quality, clean composition, 16:9.`,
+        mediaType: "placeholder",
+        mediaBlob: null,
+        mediaUrl: "",
+        likes: 14,
+        copies: 755,
+        views: 1634,
+        updatedAt: Date.now()
+      };
+
+      const DB_NAME = "PromptSingleSectionDB";
+      const STORE_NAME = "mainPrompt";
+      const DB_VERSION = 1;
+
+      const gallery = document.getElementById("gallery");
+      const emptyState = document.getElementById("emptyState");
+      const modal = document.getElementById("submitModal");
+      const form = document.getElementById("promptForm");
+      const mediaFile = document.getElementById("mediaFile");
+      const uploadArea = document.getElementById("uploadArea");
+      const uploadDefault = document.getElementById("uploadDefault");
+      const uploadPreview = document.getElementById("uploadPreview");
+      const uploadHint = document.getElementById("uploadHint");
+      const formError = document.getElementById("formError");
+      const toast = document.getElementById("toast");
+
+      let selectedFile = null;
+      let toastTimer = null;
+      let currentPrompt = { ...defaultPrompt };
+      let activeMediaUrl = null;
+
+      function openDatabase() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+          request.onupgradeneeded = () => {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+              db.createObjectStore(STORE_NAME, { keyPath: "id" });
+            }
+          };
+
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+      }
+
+      async function saveMainPrompt(prompt) {
+        const db = await openDatabase();
+        return new Promise((resolve, reject) => {
+          const transaction = db.transaction(STORE_NAME, "readwrite");
+          transaction.objectStore(STORE_NAME).put(prompt);
+          transaction.oncomplete = () => resolve();
+          transaction.onerror = () => reject(transaction.error);
+        });
+      }
+
+      async function getMainPrompt() {
+        const db = await openDatabase();
+        return new Promise((resolve, reject) => {
+          const transaction = db.transaction(STORE_NAME, "readonly");
+          const request = transaction.objectStore(STORE_NAME).get("main-prompt");
+          request.onsuccess = () => resolve(request.result || null);
+          request.onerror = () => reject(request.error);
+        });
+      }
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
+      }
+
+      function showError(message) {
+        formError.textContent = message;
+        formError.style.display = "block";
+      }
+
+      function clearError() {
+        formError.textContent = "";
+        formError.style.display = "none";
+      }
+
+      function openModal() {
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+      }
+
+      function closeModal() {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+        clearError();
+      }
+
+      function resetForm() {
+        form.reset();
+        document.getElementById("typeImage").checked = true;
+        mediaFile.accept = "image/*";
+        uploadHint.textContent = "پشتیبانی از JPG، PNG و WEBP";
+        selectedFile = null;
+        uploadPreview.innerHTML = "";
+        uploadPreview.style.display = "none";
+        uploadDefault.style.display = "block";
+        clearError();
+      }
+
+      function updateMediaType() {
+        const type = document.querySelector('input[name="mediaType"]:checked').value;
+        mediaFile.accept = type === "video" ? "video/*" : "image/*";
+        uploadHint.textContent = type === "video"
+          ? "پشتیبانی از MP4، WEBM و MOV"
+          : "پشتیبانی از JPG، PNG و WEBP";
+
+        selectedFile = null;
+        mediaFile.value = "";
+        uploadPreview.innerHTML = "";
+        uploadPreview.style.display = "none";
+        uploadDefault.style.display = "block";
+      }
+
+      function previewSelectedFile(file) {
+        if (!file) return;
+
+        const selectedType = document.querySelector('input[name="mediaType"]:checked').value;
+        const isImage = file.type.startsWith("image/");
+        const isVideo = file.type.startsWith("video/");
+
+        if ((selectedType === "image" && !isImage) || (selectedType === "video" && !isVideo)) {
+          showError(selectedType === "image"
+            ? "لطفاً یک فایل تصویری انتخاب کنید."
+            : "لطفاً یک فایل ویدئویی انتخاب کنید.");
+          return;
+        }
+
+        const maxSize = selectedType === "video" ? 40 * 1024 * 1024 : 12 * 1024 * 1024;
+        if (file.size > maxSize) {
+          showError(selectedType === "video"
+            ? "حجم ویدئو نباید بیشتر از ۴۰ مگابایت باشد."
+            : "حجم تصویر نباید بیشتر از ۱۲ مگابایت باشد.");
+          return;
+        }
+
+        clearError();
+        selectedFile = file;
+
+        const objectUrl = URL.createObjectURL(file);
+        uploadPreview.innerHTML = "";
+
+        if (isVideo) {
+          const video = document.createElement("video");
+          video.src = objectUrl;
+          video.controls = true;
+          video.muted = true;
+          uploadPreview.appendChild(video);
+        } else {
+          const image = document.createElement("img");
+          image.src = objectUrl;
+          image.alt = "پیش‌نمایش خروجی";
+          uploadPreview.appendChild(image);
+        }
+
+        uploadDefault.style.display = "none";
+        uploadPreview.style.display = "block";
+      }
+
+      function addPromptLines(pre, text) {
+        pre.innerHTML = "";
+        String(text || "").replace(/\r\n/g, "\n").split("\n").forEach((line, index) => {
+          const number = document.createElement("span");
+          number.className = "line-number";
+          number.textContent = index + 1;
+
+          const content = document.createElement("span");
+          content.className = "line-content";
+          content.textContent = line || " ";
+
+          pre.append(number, content);
+        });
+      }
+
+      function createMediaElement(prompt) {
+        if (activeMediaUrl) {
+          URL.revokeObjectURL(activeMediaUrl);
+          activeMediaUrl = null;
+        }
+
+        if (prompt.mediaType === "image" && (prompt.mediaBlob || prompt.mediaUrl)) {
+          const image = document.createElement("img");
+          if (prompt.mediaBlob) {
+            activeMediaUrl = URL.createObjectURL(prompt.mediaBlob);
+            image.src = activeMediaUrl;
+          } else {
+            image.src = prompt.mediaUrl;
+          }
+          image.alt = prompt.title;
+          image.loading = "lazy";
+          return image;
+        }
+
+        if (prompt.mediaType === "video" && (prompt.mediaBlob || prompt.mediaUrl)) {
+          const video = document.createElement("video");
+          if (prompt.mediaBlob) {
+            activeMediaUrl = URL.createObjectURL(prompt.mediaBlob);
+            video.src = activeMediaUrl;
+          } else {
+            video.src = prompt.mediaUrl;
+          }
+          video.controls = true;
+          video.playsInline = true;
+          video.preload = "metadata";
+          return video;
+        }
+
+        const placeholder = document.createElement("div");
+        placeholder.className = "media-placeholder";
+        placeholder.innerHTML = `
+          <div>
+            <div class="media-placeholder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <path d="m21 15-5-5L5 21"></path>
+              </svg>
+            </div>
+            <h3>محل نمایش تصویر یا ویدئو</h3>
+            <p>با زدن دکمه ثبت پرامپت، خروجی و متن پرامپت داخل همین سکشن اصلی نمایش داده می‌شود.</p>
+          </div>`;
+        return placeholder;
+      }
+
+      function downloadPrompt(prompt) {
+        const blob = new Blob([prompt.prompt], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = `${slugify(prompt.title)}.txt`;
+        anchor.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function slugify(text) {
+        return String(text || "prompt")
+          .trim()
+          .toLowerCase()
+          .replace(/[^\u0600-\u06FFa-z0-9]+/gi, "-")
+          .replace(/^-+|-+$/g, "") || "prompt";
+      }
+
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const temp = document.createElement("textarea");
+          temp.value = text;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand("copy");
+          temp.remove();
+        }
+      }
+
+      async function sharePrompt(prompt) {
+        const data = {
+          title: prompt.title,
+          text: prompt.description || prompt.title,
+          url: location.href
+        };
+
+        if (navigator.share) {
+          try {
+            await navigator.share(data);
+            return;
+          } catch (error) {
+            if (error.name === "AbortError") return;
+          }
+        }
+
+        await copyText(location.href);
+        showToast("لینک صفحه کپی شد");
+      }
+
+      function renderMainSection(prompt) {
+        currentPrompt = prompt;
+
+        // This is the important part:
+        // before rendering, clear the gallery so the page always has only ONE section/card.
+        gallery.innerHTML = "";
+        emptyState.style.display = "none";
+
+        const template = document.getElementById("promptCardTemplate");
+        const card = template.content.firstElementChild.cloneNode(true);
+
+        card.dataset.id = "main-prompt";
+        card.querySelector(".card-title").textContent = prompt.title;
+        card.querySelector(".card-category").textContent = prompt.category;
+        card.querySelector(".card-model").textContent = prompt.model;
+        card.querySelector(".card-description").textContent =
+          prompt.description || "توضیحی برای این پرامپت ثبت نشده است.";
+
+        card.querySelector(".like-count").textContent = Number(prompt.likes || 0).toLocaleString("en-US");
+        card.querySelector(".copy-count").textContent = Number(prompt.copies || 0).toLocaleString("en-US");
+        card.querySelector(".view-count").textContent = Number(prompt.views || 1).toLocaleString("en-US");
+
+        card.querySelector(".media-frame").appendChild(createMediaElement(prompt));
+        addPromptLines(card.querySelector(".prompt-code"), prompt.prompt);
+
+        const copyButton = card.querySelector(".copy-button");
+        copyButton.addEventListener("click", async () => {
+          await copyText(prompt.prompt);
+          prompt.copies = Number(prompt.copies || 0) + 1;
+          card.querySelector(".copy-count").textContent = prompt.copies.toLocaleString("en-US");
+          await saveMainPrompt(prompt);
+
+          copyButton.classList.add("success");
+          copyButton.querySelector("span").textContent = "کپی شد";
+          setTimeout(() => {
+            copyButton.classList.remove("success");
+            copyButton.querySelector("span").textContent = "کپی";
+          }, 1500);
+
+          showToast("پرامپت کپی شد");
+        });
+
+        const likeButton = card.querySelector(".like-button");
+        likeButton.addEventListener("click", async () => {
+          const active = likeButton.classList.toggle("active");
+          prompt.likes = Math.max(0, Number(prompt.likes || 0) + (active ? 1 : -1));
+          card.querySelector(".like-count").textContent = prompt.likes.toLocaleString("en-US");
+          await saveMainPrompt(prompt);
+          showToast(active ? "پرامپت پسندیده شد" : "پسند حذف شد");
+        });
+
+        card.querySelector(".download-button")
+          .addEventListener("click", () => downloadPrompt(prompt));
+
+        card.querySelector(".share-button")
+          .addEventListener("click", () => sharePrompt(prompt));
+
+        gallery.appendChild(card);
+        return card;
+      }
+
+      async function loadMainSection() {
+        try {
+          const savedPrompt = await getMainPrompt();
+          renderMainSection(savedPrompt || currentPrompt);
+        } catch {
+          renderMainSection(currentPrompt);
+          showToast("ذخیره محلی مرورگر در دسترس نیست");
+        }
+      }
+
+      document.getElementById("openSubmitModal").addEventListener("click", openModal);
+      document.getElementById("closeSubmitModal").addEventListener("click", closeModal);
+      document.getElementById("cancelSubmit").addEventListener("click", closeModal);
+
+      modal.addEventListener("click", event => {
+        if (event.target === modal) closeModal();
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") closeModal();
+      });
+
+      document.querySelectorAll('input[name="mediaType"]').forEach(input => {
+        input.addEventListener("change", updateMediaType);
+      });
+
+      mediaFile.addEventListener("change", event => {
+        previewSelectedFile(event.target.files?.[0]);
+      });
+
+      ["dragenter", "dragover"].forEach(type => {
+        uploadArea.addEventListener(type, event => {
+          event.preventDefault();
+          uploadArea.classList.add("dragging");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(type => {
+        uploadArea.addEventListener(type, event => {
+          event.preventDefault();
+          uploadArea.classList.remove("dragging");
+        });
+      });
+
+      uploadArea.addEventListener("drop", event => {
+        const file = event.dataTransfer.files?.[0];
+        if (file) {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          mediaFile.files = dataTransfer.files;
+          previewSelectedFile(file);
+        }
+      });
+
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+        clearError();
+
+        const mediaType = document.querySelector('input[name="mediaType"]:checked').value;
+        const title = document.getElementById("promptTitle").value.trim();
+        const category = document.getElementById("category").value;
+        const model = document.getElementById("aiModel").value;
+        const description = document.getElementById("description").value.trim();
+        const promptText = document.getElementById("promptText").value.trim();
+
+        if (!selectedFile) {
+          showError("لطفاً فایل خروجی را به‌صورت تصویر یا ویدئو انتخاب کنید.");
+          return;
+        }
+
+        if (!title || !category || !model || !promptText) {
+          showError("لطفاً همه بخش‌های الزامی را کامل کنید.");
+          return;
+        }
+
+        const updatedPrompt = {
+          id: "main-prompt",
+          title,
+          category,
+          model,
+          description,
+          prompt: promptText,
+          mediaType,
+          mediaBlob: selectedFile,
+          mediaUrl: "",
+          likes: 0,
+          copies: 0,
+          views: 1,
+          updatedAt: Date.now()
+        };
+
+        try {
+          await saveMainPrompt(updatedPrompt);
+          const card = renderMainSection(updatedPrompt);
+          closeModal();
+          resetForm();
+          card.scrollIntoView({ behavior: "smooth", block: "start" });
+          showToast("پرامپت داخل همان سکشن اصلی نمایش داده شد");
+        } catch (error) {
+          showError(
+            "مرورگر نتوانست فایل را ذخیره کند. ممکن است حجم فایل زیاد باشد یا فضای ذخیره‌سازی مرورگر محدود شده باشد."
+          );
+        }
+      });
+
+      loadMainSection();
+    })();
+  </script>
+</body>
+</html>
